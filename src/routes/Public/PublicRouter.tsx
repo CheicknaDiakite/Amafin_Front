@@ -29,12 +29,10 @@ import Objectifs from '../../components/Objectifs'
 export default function PublicRouter() {
   // notClick()
 
-  const uuid = useStoreUuid((state) => state.selectedId);
-  const { unEntreprise } = useFetchEntreprise(uuid);
-  const url = unEntreprise.image ? BASE(unEntreprise.image) : backgroundImage;
-  
+  const url = backgroundImage;
+
   return (
-    <Box 
+    <Box
       className='bg-red-200'
       sx={{
         background: `linear-gradient(rgba(128, 128, 128, 0.7), rgba(128, 128, 128, 0.7)), url(${url})`,
@@ -46,8 +44,8 @@ export default function PublicRouter() {
     >
       <Routes>
         <Route element={<Dashboard />}>
-        <Route index element={ <DashboardDefault />} />
-          {/* <Route index element={ <DashboardDefault />} /> */}          
+          <Route index element={<DashboardDefault />} />
+          {/* <Route index element={ <DashboardDefault />} /> */}
 
           <Route path='depense'>
             <Route index element={<Depense />} />
@@ -69,8 +67,8 @@ export default function PublicRouter() {
           <Route path='personnel' >
 
             {/* <Route element={<ProtectedRoute requiredRole={1} redirectPath="/" />}> */}
-              <Route index element={<Personnel />} />
-              <Route path='modif/:uuid' element={<PersonnelModif />} />
+            <Route index element={<Personnel />} />
+            <Route path='modif/:uuid' element={<PersonnelModif />} />
             {/* </Route>       */}
 
           </Route>
@@ -84,29 +82,29 @@ export default function PublicRouter() {
             <Route path='modif/:uuid' element={<Admin />} />
           </Route>
           {/* </Route> */}
-          
+
           {/* <Route element={<ProtectedRoute requiredRole={[1, 2]} redirectPath="/" />}>         */}
-            <Route path='categorie' >
-              <Route index element={<ComponentShadow />} />
-              
-              <Route path='modif/:uuid' element={<ModifCate />} /> 
+          <Route path='categorie' >
+            <Route index element={<ComponentShadow />} />
 
-              <Route path='sous'>
-                <Route path=':uuid'  element={<SousCat />} />
-                <Route path='modif/:uuid'  element={<ModifSousCate />} />
-              </Route>
+            <Route path='modif/:uuid' element={<ModifCate />} />
 
-              <Route path='info/:uuid'  element={<Info />} />
-                      
+            <Route path='sous'>
+              <Route path=':uuid' element={<SousCat />} />
+              <Route path='modif/:uuid' element={<ModifSousCate />} />
             </Route>
+
+            <Route path='info/:uuid' element={<Info />} />
+
+          </Route>
           {/* </Route> */}
 
           <Route path='user'>
 
             <Route element={<ProtectedRoute requiredRole={1} redirectPath="/" />}>
-              <Route path="admin" element={<Users />} />            
+              <Route path="admin" element={<Users />} />
               <Route path="avis" element={<Avis />} />
-              
+
             </Route>
 
             <Route path="mesInscrit" element={<MesInscrit />} />

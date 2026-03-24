@@ -6,10 +6,8 @@ import AuthRegister from './auth-forms/AuthRegister';
 const Register: FC = () => {
   return (
     <AuthWrapper>
-      <Grid container >
-        
-          <AuthRegister />
-        
+      <Grid container >        
+        <AuthRegister />        
       </Grid>
     </AuthWrapper>
   );

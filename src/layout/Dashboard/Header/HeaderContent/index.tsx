@@ -1,11 +1,10 @@
-// material-ui
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useMediaQuery, Box } from '@mui/material';
 
 // project import
 import Search from './Search';
 import Profile from './Profile';
-
-// project import
+import Notification from './Notification';
+import MobileSection from './MobileSection';
 
 // ==============================|| HEADER - CONTENT ||============================== //
 
@@ -14,15 +13,12 @@ export default function HeaderContent() {
 
   return (
     <>
-    
-      {!downLG && <Search />}
-      {downLG && <Search />}
-      {/* {downLG && <Box sx={{ width: '100%', ml: 1 }} />} */}
+
+      {downLG && <Box sx={{ width: '100%', ml: 1 }} />}
 
       {/* <Notification /> */}
       {!downLG && <Profile />}
       {downLG && <Profile />}
-      {/* {downLG && <MobileSection />} */}
     </>
   );
 }

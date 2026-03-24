@@ -21,7 +21,7 @@ export default defineConfig({
         manifest: {
             name: 'Amafin',
             short_name: 'Amafin',
-            description: 'Meilleur application Amafin',
+            description: 'Meilleur application de gestion de budget pour les entreprises',
             theme_color: '#ffffff',
             background_color: '#ffffff',
             display: 'standalone',

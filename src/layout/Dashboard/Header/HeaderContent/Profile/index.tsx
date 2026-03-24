@@ -49,7 +49,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index : number) {
+function a11yProps(index: number) {
   return {
     id: `profile-tab-${index}`,
     'aria-controls': `profile-tabpanel-${index}`
@@ -65,8 +65,8 @@ export default function Profile() {
     return savedCount ? parseInt(savedCount, 10) : 0;
   });
 
-  const {unUser, isLoading, isError} = useFetchUser()
-  
+  const { unUser, isLoading, isError } = useFetchUser()
+
   useEffect(() => {
     if (isError) {
       const newCount = errorCount + 1;
@@ -80,7 +80,7 @@ export default function Profile() {
       logout();
     }
   }, [errorCount]);
-  
+
   const [value, setValue] = useState(0);
 
   const handleChange = (_: SyntheticEvent, newValue: number) => {
@@ -107,13 +107,13 @@ export default function Profile() {
 
 
   if (isLoading) {
-      return (
-        <Box sx={{ width: 300 }}>
-          <CircularProgress />
-        </Box>
-      );
+    return (
+      <Box sx={{ width: 300 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
-  
+
   if (isError) {
     if (errorCount < 2) {
       window.location.reload();
@@ -123,27 +123,48 @@ export default function Profile() {
 
   if (unUser) {
     return (
-      <Box 
-      // className="text-white border-indigo-600 bg-gradient-to-r from-blue-500 to-green-600 hover:from-blue-600 hover:to-green-700 border border-dashed animate-border-rotate rounded-lg"
-      >
+      <Box sx={{ flexShrink: 0, ml: 0.75 }}>
         <ButtonBase
-          // sx={{
-          //   p: 0.25,
-          //   bgcolor: open ? iconBackColorOpen : 'transparent',
-          //   borderRadius: 1,
-          //   '&:hover': { bgcolor: 'secondary.lighter' },
-          //   '&:focus-visible': { outline: `2px solid ${theme.palette.secondary.dark}`, outlineOffset: 2 }
-          // }}
+          sx={{
+            p: 0.5,
+            px: { xs: 0.5, sm: 1.5 },
+            borderRadius: '50px',
+            transition: 'all 0.3s ease',
+            backgroundColor: open ? 'rgba(0, 0, 0, 0.05)' : 'transparent',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.05)',
+              transform: 'translateY(-1px)'
+            },
+            '&:focus-visible': {
+              outline: `2px solid ${theme.palette.primary.main}`,
+              outlineOffset: 2
+            }
+          }}
           aria-label="open profile"
           ref={anchorRef}
           aria-controls={open ? 'profile-grow' : undefined}
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <Stack direction="row" spacing={1.25} alignItems="center" sx={{ p: 0.5 }}>
-            <Avatar {...stringAvatar(`${unUser.last_name} ${unUser.first_name}`)} />
-            <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-              {unUser.last_name} 
+          <Stack direction="row" spacing={1.25} alignItems="center">
+            <Avatar 
+              {...stringAvatar(`${unUser.last_name} ${unUser.first_name}`)} 
+              sx={{ 
+                width: 32, 
+                height: 32,
+                fontSize: '0.875rem'
+              }} 
+            />
+            <Typography 
+              variant="subtitle1" 
+              sx={{ 
+                textTransform: 'capitalize',
+                fontWeight: 600,
+                display: { xs: 'none', sm: 'block' },
+                color: 'text.primary'
+              }}
+            >
+              {unUser.last_name} {unUser.first_name}
             </Typography>
           </Stack>
         </ButtonBase>
@@ -178,11 +199,11 @@ export default function Profile() {
                             <Avatar alt="profile user" {...stringAvatar(`${unUser.last_name} ${unUser.first_name}`)} sx={{ width: 32, height: 32 }} />
                             <Stack>
                               <Typography variant="h6">{unUser.last_name} {unUser.first_name}</Typography>
-                              
+
                               {/* <Typography variant="body2" color="text.secondary">
                                 {unEntreprise.nom}
                               </Typography> */}
-                              
+
                             </Stack>
                           </Stack>
                         </Grid>
@@ -196,43 +217,43 @@ export default function Profile() {
                       </Grid>
                     </CardContent>
 
-                    {uuid && <>                    
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                      <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="profile tabs">
-                        <Tab
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            textTransform: 'capitalize'
-                          }}
-                          icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                          label="Profile"
-                          {...a11yProps(0)}
-                        />
-                        <Tab
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            textTransform: 'capitalize'
-                          }}
-                          icon={<SettingOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                          label="Facture / Depense"
-                          {...a11yProps(1)}
-                        />
-                      </Tabs>
-                    </Box>
-                    <TabPanel value={value} index={0}>
-                      <ProfileTab />
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                      <SettingTab />
-                    </TabPanel>
+                    {uuid && <>
+                      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="profile tabs">
+                          <Tab
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              textTransform: 'capitalize'
+                            }}
+                            icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
+                            label="Profile"
+                            {...a11yProps(0)}
+                          />
+                          <Tab
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              textTransform: 'capitalize'
+                            }}
+                            icon={<SettingOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
+                            label="Facture / Depense"
+                            {...a11yProps(1)}
+                          />
+                        </Tabs>
+                      </Box>
+                      <TabPanel value={value} index={0}>
+                        <ProfileTab />
+                      </TabPanel>
+                      <TabPanel value={value} index={1}>
+                        <SettingTab />
+                      </TabPanel>
                     </>}
-                    
+
                   </MainCard>
                 </ClickAwayListener>
               </Paper>

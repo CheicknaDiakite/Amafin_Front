@@ -71,7 +71,7 @@ const AuthRegister: FC = () => {
     try {
       await create(data);
       await delay(4000);
-      
+
       reset();
     } catch (error) {
       toast.error(
@@ -81,15 +81,15 @@ const AuthRegister: FC = () => {
   };
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-      <Card 
-        elevation={6} 
+      <Card
+        elevation={6}
         sx={{ width: '100%', maxWidth: 640, borderRadius: 3, overflow: 'hidden' }}
       >
-        
+
         <CardContent sx={{ py: 4, px: 6 }} >
-          
+
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-            
+
             <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>
               <PersonAddAltIcon fontSize="large" />
             </Avatar>
@@ -149,6 +149,18 @@ const AuthRegister: FC = () => {
                 disabled={isSubmitting}
               />
 
+              <TextField
+                label="Nom d'utilisateur"
+                error={!!errors.username}
+                helperText={errors.username?.message || ''}
+                {...register('username', {
+                  required: 'Le nom d\'utilisateur est requis',
+                  minLength: { value: 3, message: 'Le nom d\'utilisateur doit contenir au moins 3 caractères' }
+                })}
+                fullWidth
+                disabled={isSubmitting}
+              />
+
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
                 <TextField
                   label="Numéro de téléphone"
@@ -157,7 +169,7 @@ const AuthRegister: FC = () => {
                   {...register('numero', {
                     required: 'Le numéro est requis',
                     pattern: {
-                      value: /^[+]?[0-9]{8,15}$/, 
+                      value: /^[+]?[0-9]{8,15}$/,
                       message: 'Format de numéro invalide'
                     }
                   })}
@@ -165,7 +177,7 @@ const AuthRegister: FC = () => {
                   disabled={isSubmitting}
                 />
 
-                <FormControl fullWidth error={!!errors.pays}>
+                {/* <FormControl fullWidth error={!!errors.pays}>
                   <InputLabel>Pays</InputLabel>
                   <Select
                     {...register('pays', { required: 'Le pays est requis' })}
@@ -181,7 +193,7 @@ const AuthRegister: FC = () => {
                   {errors.pays && (
                     <FormHelperText error>{errors.pays.message}</FormHelperText>
                   )}
-                </FormControl>
+                </FormControl> */}
               </Box>
 
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
@@ -222,8 +234,8 @@ const AuthRegister: FC = () => {
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                
-                  {/* <Typography
+
+                {/* <Typography
                     component={Link}
                     to="/auth/login"
                     variant="h5"
@@ -244,11 +256,11 @@ const AuthRegister: FC = () => {
               </Box>
 
               {/* <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}> */}
-                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting} sx={{ py: 1.5, textTransform: 'none', fontWeight: 600 }}>
-                  {isSubmitting ? 'Inscription en cours...' : 'S\'inscrire'}
-                </Button>
+              <Button type="submit" variant="contained" color="primary" disabled={isSubmitting} sx={{ py: 1.5, textTransform: 'none', fontWeight: 600 }}>
+                {isSubmitting ? 'Inscription en cours...' : 'S\'inscrire'}
+              </Button>
 
-                {/* <Button variant="text" component={Link} to="/auth/login" sx={{ textTransform: 'none' }}>
+              {/* <Button variant="text" component={Link} to="/auth/login" sx={{ textTransform: 'none' }}>
                   Déjà un compte ? Se connecter
                 </Button> */}
               {/* </Box> */}

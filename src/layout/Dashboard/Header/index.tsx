@@ -18,6 +18,7 @@ import MenuFoldOutlined from '@ant-design/icons/MenuFoldOutlined';
 import MenuUnfoldOutlined from '@ant-design/icons/MenuUnfoldOutlined';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useLocation, useNavigate } from 'react-router-dom';
+import AppHeader from './AppHeader';
 
 // ==============================|| MAIN LAYOUT - HEADER ||============================== //
 interface AppBarStyledProps extends AppBarProps {
@@ -33,68 +34,64 @@ export default function Header() {
   const isHome = location.pathname === '/';
 
   // header content
-  const headerContent = useMemo(() => <HeaderContent />, []);
+  const headerContent = useMemo(() => <AppHeader />, []);
 
   const iconBackColor = 'grey.100';
   const iconBackColorOpen = 'grey.200';
 
   // common header
   const mainHeader = (
-    <Toolbar 
-    style={{ 
-      background: `linear-gradient(rgba(128, 128, 128, 0.7), rgba(128, 128, 128, 0.7)) center center`, 
-      backgroundSize: 'contain', // Peut être 'cover' ou 'contain' selon votre besoin
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      
-    }}
+    <Toolbar
+      sx={{
+        minHeight: '64px',
+        px: { xs: 2, sm: 3, md: 4 }
+      }}
     >
       {/* Si on est sur la page d'accueil : afficher le bouton menu, sinon bouton retour */}
-      {isHome ? (
-        // <IconButton
-        //   disableRipple
-        //   aria-label="open drawer"
-        //   onClick={() => handlerDrawerOpen(!drawerOpen)}
-        //   edge="start"
-        //   color="secondary"
-        //   sx={{ color: 'text.primary', bgcolor: drawerOpen ? iconBackColorOpen : iconBackColor, ml: { xs: 0, lg: -2 } }}
-        // >
-        //   {!drawerOpen ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        // </IconButton>
-        ''
-      ) : (
+      {!isHome && (
         <IconButton
           disableRipple
           aria-label="go back"
           onClick={() => navigate(-1)}
           edge="start"
           color="secondary"
-          sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: { xs: 0, lg: -2 } }}
+          sx={{
+            color: 'text.primary',
+            bgcolor: 'rgba(0, 0, 0, 0.05)',
+            mr: 2,
+            '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.1)' }
+          }}
         >
-          <ArrowBackIosNewIcon />
+          <ArrowBackIosNewIcon sx={{ fontSize: '1.2rem' }} />
         </IconButton>
       )}
-      
-      {headerContent}
+
+      <AppHeader />
     </Toolbar>
   );
 
   // app-bar params
   const appBar: AppBarStyledProps = {
     position: 'fixed',
-    color: 'transparent', // Utilisez une couleur valide ici
+    color: 'inherit',
     elevation: 0,
     sx: {
-      borderBottom: `1px solid ${theme.palette.divider}`
+      backgroundColor: 'rgba(255, 255, 255, 0.7)',
+      backdropFilter: 'blur(10px)',
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      zIndex: theme.zIndex.drawer + 1,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      })
     },
-    open: drawerOpen // Ajoutez l'état 'open' si nécessaire
+    open: drawerOpen
   };
 
   return (
     <>
       {!downLG ? (
         <AppBarStyled {...appBar}>
-          
           {mainHeader}
         </AppBarStyled>
       ) : (
