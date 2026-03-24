@@ -36,7 +36,11 @@ export default function MonthlyTarget() {
 
   const { totalCible, totalAtteint, safePercent, chartValue, primaryColor } = useMemo(() => {
     const cible = objectifs.reduce((s, o) => s + Number(o.montant_cible || 0), 0);
-    const atteint = objectifs.reduce((s, o) => s + Number(o.montant_atteint ?? 0), 0);
+    // On utilise le montant_net s'il est fourni par l'API, sinon on le calcule
+    const atteint = objectifs.reduce((s, o) => {
+      const net = o.montant_net ?? (Number(o.montant_atteint ?? 0) - Number(o.total_depenses ?? 0));
+      return s + net;
+    }, 0);
     const rawPercent = cible > 0 ? (atteint / cible) * 100 : 0;
     const clampedDisplay = Math.round(Math.min(999, Math.max(-100, rawPercent)) * 100) / 100;
     const arcVal = Math.max(0, Math.min(100, rawPercent));

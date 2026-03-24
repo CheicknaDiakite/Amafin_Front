@@ -26,6 +26,8 @@ export interface Objectif {
   nom: string;
   montant_cible: number;
   montant_atteint?: number;
+  total_depenses?: number;
+  montant_net?: number;
   date_limite?: string;
   compte_associe?: number | null;
 }

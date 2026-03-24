@@ -9,6 +9,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import { Link } from 'react-router-dom';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useFetchEntreprise, useFetchUser } from '../../usePerso/fonction.user';
+import { useGetSumDepense } from '../../usePerso/fonction.entre';
 import { useStoreUuid } from '../../usePerso/store';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -117,7 +118,7 @@ const NavigationCard: FC<NavigationCardType> = ({ icon, title, description, to, 
   <Link to={to} className="block h-full no-underline">
     <Paper
       elevation={0}
-      className="h-full rounded-xl sm:rounded-[20px] mobile-nav-card mobile-hover-effect bg-white border border-gray-100/80 p-3.5 sm:p-5 group mobile-glass"
+      className="h-full rounded-xl sm:rounded-[20px] mobile-nav-card mobile-hover-effect border border-gray-100/80 p-3.5 sm:p-5 group mobile-glass"
       sx={{
         minHeight: { xs: 118, sm: 142 },
         transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
@@ -129,7 +130,7 @@ const NavigationCard: FC<NavigationCardType> = ({ icon, title, description, to, 
         },
       }}
     >
-      <Box className="flex flex-col h-full">
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', h: '100%' }}>
         <Box
           className={`${iconBg} ${gradient} w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl mb-3 flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105 mobile-icon`}
         >
@@ -137,14 +138,14 @@ const NavigationCard: FC<NavigationCardType> = ({ icon, title, description, to, 
         </Box>
         <Typography
           variant="h6"
-          className="font-bold text-gray-900 mb-0.5"
+          className="font-bold text-gray-50 mb-0.5"
           sx={{ fontSize: { xs: '0.82rem', sm: '1rem' }, lineHeight: 1.3 }}
         >
           {title}
         </Typography>
         <Typography
           variant="body2"
-          className="text-gray-500 line-clamp-2"
+          className="text-gray-200 line-clamp-2"
           sx={{ fontSize: { xs: '0.7rem', sm: '0.8rem' }, lineHeight: 1.35 }}
         >
           {description}
@@ -165,6 +166,7 @@ function SectionHeader({
 }) {
   return (
     <Box
+      
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', sm: 'row' },
@@ -177,11 +179,12 @@ function SectionHeader({
       <Box>
         <Typography
           variant="overline"
+          className='text-gray-50'
           sx={{ color: 'text.secondary', letterSpacing: 1.2, fontWeight: 600, fontSize: '0.65rem' }}
         >
           {subtitle}
         </Typography>
-        <Typography variant="h5" sx={{ fontWeight: 800, color: 'text.primary', fontSize: { xs: '1.15rem', sm: '1.35rem' } }}>
+        <Typography className='text-gray-100' variant="h5" sx={{ fontWeight: 800, color: 'text.primary', fontSize: { xs: '1.15rem', sm: '1.35rem' } }}>
           {title}
         </Typography>
       </Box>
@@ -205,6 +208,9 @@ export default function DashboardDefault() {
   const uuid = useStoreUuid((state) => state.selectedId);
   const entrepriseData = useFetchEntreprise(uuid);
   const unEntreprise = entrepriseData.unEntreprise;
+
+  // Récupération des sommes de dépenses par mois (Modèle Depense)
+  const { depensesSum } = useGetSumDepense();
 
   useEffect(() => {
     let cancelled = false;
@@ -235,25 +241,26 @@ export default function DashboardDefault() {
     [comptes],
   );
 
-  const lastMonthTotal = useMemo(() => {
+  /**
+   * Calcul du total des dépenses pour le mois en cours.
+   * On se base sur les données retournées par l'API get_depenses_somme (modèle Depense).
+   */
+  const currentMonthExpenseTotal = useMemo(() => {
     try {
-      if (!transactions.length) return 0;
-      const withDate = transactions.filter((t) => t.created_at);
-      if (!withDate.length) return 0;
-      withDate.sort((a, b) => new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime());
-      const latest = withDate[0];
-      const latestDate = new Date(latest.created_at!);
-      const y = latestDate.getFullYear();
-      const m = latestDate.getMonth();
-      return transactions.reduce((acc, t) => {
-        if (t.type !== 'depense' || !t.created_at) return acc;
-        const d = new Date(t.created_at);
-        return d.getFullYear() === y && d.getMonth() === m ? acc + Number(t.montant || 0) : acc;
-      }, 0);
-    } catch {
+      const now = new Date();
+      const currentMonthName = new Intl.DateTimeFormat('fr-FR', { month: 'long' }).format(now).toLowerCase();
+      const currentYear = now.getFullYear();
+      const searchKey = `${currentMonthName} ${currentYear}`;
+
+      const currentMonthEntry = depensesSum?.find((d) => d.mois.trim().toLowerCase() === searchKey);
+      return currentMonthEntry ? Number(currentMonthEntry.total) : 0;
+    } catch (e) {
+      console.error("Erreur calcul depense mois", e);
       return 0;
     }
-  }, [transactions]);
+  }, [depensesSum]);
+
+  const lastMonthTotal = currentMonthExpenseTotal; // On remplace l'ancienne logique par la nouvelle
 
   const revenue = typeof totalSolde === 'number' ? totalSolde - lastMonthTotal : null;
 
@@ -360,11 +367,11 @@ export default function DashboardDefault() {
     <Box
       component="main"
       className="min-h-screen mobile-container"
-      sx={{
-        bgcolor: 'grey.50',
-        pb: { xs: 'max(24px, env(safe-area-inset-bottom))', sm: 6 },
-        pt: { xs: 'max(8px, env(safe-area-inset-top))', sm: 0 },
-      }}
+    // sx={{
+    //   bgcolor: 'grey.50',
+    //   pb: { xs: 'max(24px, env(safe-area-inset-bottom))', sm: 6 },
+    //   pt: { xs: 'max(8px, env(safe-area-inset-top))', sm: 0 },
+    // }}
     >
       <Container
         maxWidth="xl"
@@ -389,9 +396,10 @@ export default function DashboardDefault() {
               <Typography
                 variant="h4"
                 component="h1"
+                className="font-bold text-gray-50 mb-0.5"
                 sx={{
                   fontWeight: 800,
-                  color: 'grey.900',
+                  
                   fontSize: { xs: '1.35rem', sm: '1.75rem', md: '2rem' },
                   lineHeight: 1.25,
                   mb: 0.5,
@@ -401,8 +409,9 @@ export default function DashboardDefault() {
               </Typography>
               <Typography
                 variant="body2"
+                className="font-bold text-gray-100 mb-0.5"
                 sx={{
-                  color: 'text.secondary',
+                  
                   fontSize: { xs: '0.875rem', sm: '1rem' },
                   lineHeight: 1.5,
                 }}

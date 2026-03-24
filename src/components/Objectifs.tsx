@@ -241,13 +241,18 @@ const Objectifs: React.FC = () => {
               </Box>
             </Box>
             <Typography>
-              {obj.montant_atteint ?? 0} / {obj.montant_cible} €
+              {obj.montant_net ?? (Number(obj.montant_atteint ?? 0) - Number(obj.total_depenses ?? 0))} / {obj.montant_cible} €
+              {obj.total_depenses ? (
+                <span style={{ fontSize: '0.8rem', color: '#666', marginLeft: '8px' }}>
+                  (Dépensé: {obj.total_depenses} €)
+                </span>
+              ) : null}
             </Typography>
             <LinearProgress
               variant="determinate"
               value={
                 obj.montant_cible
-                  ? ((obj.montant_atteint ?? 0) / obj.montant_cible) * 100
+                  ? ((obj.montant_net ?? (Number(obj.montant_atteint ?? 0) - Number(obj.total_depenses ?? 0))) / obj.montant_cible) * 100
                   : 0
               }
               sx={{ mt: 1 }}
