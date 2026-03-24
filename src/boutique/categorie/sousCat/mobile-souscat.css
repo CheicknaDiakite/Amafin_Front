@@ -1,0 +1,409 @@
+/* Styles pour l'apparence mobile des composants SousCat et Info */
+
+/* Animation d'entrée pour les cartes */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Styles pour les cartes de produits mobile */
+.mobile-product-card {
+  animation: slideInUp 0.6s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px !important;
+  overflow: hidden;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.mobile-product-card:hover::before {
+  opacity: 1;
+}
+
+.mobile-product-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Styles pour les images de produits */
+.mobile-product-image {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-product-card:hover .mobile-product-image {
+  transform: scale(1.05);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+}
+
+/* Styles pour les boutons d'édition */
+.mobile-edit-button {
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-edit-button:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles pour le header mobile */
+.mobile-header-container {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Styles pour les titres mobiles */
+.mobile-title {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour la barre de recherche mobile */
+.mobile-search-container {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.mobile-search-container:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les boutons mobiles */
+.mobile-button {
+  border-radius: 12px !important;
+  font-weight: 600;
+  text-transform: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+.mobile-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
+}
+
+/* Styles pour les grilles mobiles */
+.mobile-grid {
+  gap: 12px !important;
+}
+
+.mobile-grid .MuiGrid-item {
+  padding: 6px !important;
+}
+
+/* Styles pour les cartes de statistiques */
+.mobile-stats-card {
+  border-radius: 16px !important;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  animation: scaleIn 0.6s ease-out;
+}
+
+.mobile-stats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les tableaux mobiles */
+.mobile-table-container {
+  border-radius: 16px !important;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-table-header {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+  backdrop-filter: blur(10px);
+}
+
+/* Styles pour les champs de date mobile */
+.mobile-date-field {
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.mobile-date-field:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les animations d'apparition séquentielles */
+.mobile-stagger-1 { animation-delay: 0.1s; }
+.mobile-stagger-2 { animation-delay: 0.2s; }
+.mobile-stagger-3 { animation-delay: 0.3s; }
+.mobile-stagger-4 { animation-delay: 0.4s; }
+.mobile-stagger-5 { animation-delay: 0.5s; }
+.mobile-stagger-6 { animation-delay: 0.6s; }
+
+/* Styles pour les effets de glassmorphism */
+.mobile-glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Styles pour les transitions fluides */
+.mobile-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Styles pour les effets de profondeur */
+.mobile-depth-1 { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+.mobile-depth-2 { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); }
+.mobile-depth-3 { box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); }
+
+/* Styles pour les bordures arrondies */
+.mobile-rounded-sm { border-radius: 8px; }
+.mobile-rounded-md { border-radius: 12px; }
+.mobile-rounded-lg { border-radius: 16px; }
+.mobile-rounded-xl { border-radius: 20px; }
+.mobile-rounded-2xl { border-radius: 24px; }
+
+/* Styles pour les espacements mobiles */
+.mobile-p-2 { padding: 8px; }
+.mobile-p-3 { padding: 12px; }
+.mobile-p-4 { padding: 16px; }
+.mobile-p-5 { padding: 20px; }
+.mobile-p-6 { padding: 24px; }
+
+/* Styles pour les marges mobiles */
+.mobile-m-2 { margin: 8px; }
+.mobile-m-3 { margin: 12px; }
+.mobile-m-4 { margin: 16px; }
+.mobile-m-5 { margin: 20px; }
+.mobile-m-6 { margin: 24px; }
+
+/* Styles spécifiques pour les cartes de produits sur mobile */
+@media (max-width: 768px) {
+  .mobile-product-card {
+    min-height: 140px !important;
+    margin-bottom: 8px;
+  }
+  
+  .mobile-product-card .mobile-product-image {
+    width: 60px !important;
+    height: 60px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .mobile-product-card h6 {
+    font-size: 0.9rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 4px !important;
+  }
+  
+  .mobile-grid {
+    gap: 8px !important;
+  }
+  
+  .mobile-grid .MuiGrid-item {
+    padding: 4px !important;
+  }
+  
+  .mobile-header-container {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .mobile-search-container {
+    margin-bottom: 12px;
+  }
+  
+  .mobile-stats-card {
+    margin-bottom: 12px;
+  }
+}
+
+/* Styles pour les très petits écrans */
+@media (max-width: 480px) {
+  .mobile-product-card {
+    min-height: 120px !important;
+  }
+  
+  .mobile-product-card .mobile-product-image {
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .mobile-product-card h6 {
+    font-size: 0.8rem !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .mobile-header-container {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .mobile-stats-card {
+    padding: 16px !important;
+  }
+}
+
+/* Styles pour les animations de chargement */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.mobile-loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Styles pour les effets de ripple */
+.mobile-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.mobile-ripple:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Styles pour les cartes vides */
+.mobile-empty-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: scaleIn 0.6s ease-out;
+}
+
+/* Styles pour les dialogues mobiles */
+.mobile-dialog {
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-dialog .MuiDialogTitle-root {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+  border-radius: 20px 20px 0 0;
+}
+
+/* Styles pour les champs de formulaire mobiles */
+.mobile-form-field {
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-form-field:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les alertes mobiles */
+.mobile-alert {
+  border-radius: 16px !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Styles pour les paginations mobiles */
+.mobile-pagination {
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  margin-top: 16px;
+}
+
+/* Styles pour les icônes de statistiques */
+.mobile-stats-icon {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.mobile-stats-card:hover .mobile-stats-icon {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+} 

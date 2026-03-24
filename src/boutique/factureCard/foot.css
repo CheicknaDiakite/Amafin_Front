@@ -1,0 +1,20 @@
+.invoice__preview {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh; /* Hauteur de la page complète */
+  }
+  
+  .invoice__footer {
+    margin-top: auto; /* Force le footer à rester en bas */
+  }
+  
+  @media print {
+    .invoice__preview {
+      min-height: 100vh;
+    }
+    .invoice__footer {
+      margin-top: auto;
+    }
+  }
+  

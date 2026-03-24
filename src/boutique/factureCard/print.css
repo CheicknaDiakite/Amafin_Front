@@ -1,0 +1,86 @@
+@media print {
+    body {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  
+    .print-container {
+      width: 100%;
+      margin: 0 auto;
+      page-break-after: always;
+    }
+  
+    @page {
+      size: A4;
+      margin: 1cm;
+    }
+  
+    @page A3 {
+      size: A3;
+    }
+  
+    @page A5 {
+      size: A5;
+    }
+  
+    @page A10 {
+      size: A10;
+    }
+  
+    .no-print {
+      display: none !important;
+    }
+
+    /* Styles pour répéter l'en-tête de la table sur chaque page */
+    thead {
+      display: table-header-group;
+    }
+    
+    tbody {
+      display: table-row-group;
+    }
+    
+    tr {
+      page-break-inside: avoid;
+    }
+    
+    /* Assurer que les cellules de l'en-tête restent visibles */
+    th {
+      background-color: #f8fafc !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    
+    /* Éviter les coupures de page dans les lignes de données */
+    td {
+      page-break-inside: avoid;
+    }
+
+    /* Styles spécifiques pour la table de facture */
+    .print-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    .print-table-header {
+      display: table-header-group;
+    }
+    
+    .print-table-body {
+      display: table-row-group;
+    }
+    
+    .print-table th,
+    .print-table td {
+      border: 1px solid #e5e7eb;
+      padding: 8px;
+      text-align: left;
+    }
+    
+    .print-table th {
+      background-color: #f8fafc !important;
+      font-weight: 600;
+      color: #374151;
+    }
+  }
+  

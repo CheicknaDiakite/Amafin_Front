@@ -1,0 +1,22 @@
+@keyframes borderColorAnimation {
+    0% {
+      border-color: #0d00ff; /* indigo-600 */
+    }
+    25% {
+      border-color: #00ff04; /* rose-500, par exemple */
+    }
+    50% {
+      border-color: #ffee00; /* rouge-400 */
+    }
+    75% {
+      border-color: #ff0000; /* bleu-400 */
+    }
+    100% {
+      border-color: #000000; /* retour à indigo-600 */
+    }
+  }
+  
+  .animated-border {
+    animation: borderColorAnimation 4s linear infinite;
+  }
+  

@@ -1,0 +1,414 @@
+/* Styles pour l'apparence mobile du dashboard */
+
+/* Animation d'entrée pour les cartes */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Styles pour les cartes de navigation mobile */
+.mobile-nav-card {
+  animation: slideInUp 0.6s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px !important;
+  overflow: hidden;
+  position: relative;
+  min-height: 120px !important;
+}
+
+.mobile-nav-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.mobile-nav-card:hover::before {
+  opacity: 1;
+}
+
+.mobile-nav-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Styles pour les icônes mobiles */
+.mobile-icon {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav-card:hover .mobile-icon {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* Styles pour les conteneurs mobiles */
+.mobile-container {
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Styles pour les titres mobiles */
+.mobile-title {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les cartes de statistiques */
+.mobile-stats-card {
+  border-radius: 16px !important;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.mobile-stats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les boutons mobiles */
+.mobile-button {
+  border-radius: 12px !important;
+  font-weight: 600;
+  text-transform: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles pour les alertes mobiles */
+.mobile-alert {
+  border-radius: 16px !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Styles pour le header mobile */
+.mobile-header {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Styles pour les grilles mobiles */
+.mobile-grid {
+  gap: 8px !important;
+}
+
+.mobile-grid .MuiGrid-item {
+  padding: 6px !important;
+}
+
+/* Styles pour les espacements mobiles */
+.mobile-spacing {
+  margin-bottom: 16px;
+}
+
+/* Styles pour les transitions fluides */
+.mobile-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Styles pour les effets de glassmorphism */
+.mobile-glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Styles pour les animations de chargement */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.mobile-loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Styles pour les effets de ripple */
+.mobile-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.mobile-ripple:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Styles pour les cartes avec dégradés */
+.mobile-gradient-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.mobile-gradient-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles pour les icônes avec couleurs dynamiques */
+.mobile-icon-blue { color: #3b82f6; }
+.mobile-icon-green { color: #10b981; }
+.mobile-icon-red { color: #ef4444; }
+.mobile-icon-purple { color: #8b5cf6; }
+.mobile-icon-orange { color: #f59e0b; }
+.mobile-icon-teal { color: #14b8a6; }
+
+/* Styles pour les effets de survol améliorés */
+.mobile-hover-effect {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-hover-effect:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles pour les animations d'apparition séquentielles */
+.mobile-stagger-1 { animation-delay: 0.1s; }
+.mobile-stagger-2 { animation-delay: 0.2s; }
+.mobile-stagger-3 { animation-delay: 0.3s; }
+.mobile-stagger-4 { animation-delay: 0.4s; }
+.mobile-stagger-5 { animation-delay: 0.5s; }
+.mobile-stagger-6 { animation-delay: 0.6s; }
+
+/* Styles pour les effets de profondeur */
+.mobile-depth-1 { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+.mobile-depth-2 { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); }
+.mobile-depth-3 { box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); }
+
+/* Styles pour les bordures arrondies */
+.mobile-rounded-sm { border-radius: 8px; }
+.mobile-rounded-md { border-radius: 12px; }
+.mobile-rounded-lg { border-radius: 16px; }
+.mobile-rounded-xl { border-radius: 20px; }
+.mobile-rounded-2xl { border-radius: 24px; }
+
+/* Styles pour les espacements mobiles */
+.mobile-p-2 { padding: 8px; }
+.mobile-p-3 { padding: 12px; }
+.mobile-p-4 { padding: 16px; }
+.mobile-p-5 { padding: 20px; }
+.mobile-p-6 { padding: 24px; }
+
+/* Styles pour les marges mobiles */
+.mobile-m-2 { margin: 8px; }
+.mobile-m-3 { margin: 12px; }
+.mobile-m-4 { margin: 16px; }
+.mobile-m-5 { margin: 20px; }
+.mobile-m-6 { margin: 24px; }
+
+/* Styles spécifiques pour iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  /* Désactiver backdrop-filter sur iOS pour éviter les problèmes de performance */
+  .mobile-stats-card,
+  .mobile-alert,
+  .mobile-header,
+  .mobile-glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  
+  /* Utiliser des backgrounds solides au lieu de transparents */
+  .mobile-stats-card {
+    background: rgba(255, 255, 255, 0.98);
+  }
+  
+  .mobile-alert {
+    background: rgba(255, 255, 255, 0.98);
+  }
+  
+  .mobile-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  }
+  
+  .mobile-glass {
+    background: rgba(255, 255, 255, 0.9);
+  }
+  
+  /* Optimiser les animations pour iOS */
+  .mobile-nav-card {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Désactiver les effets de hover complexes sur iOS */
+  .mobile-nav-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .mobile-nav-card:hover .mobile-icon {
+    transform: scale(1.05);
+  }
+  
+  /* Optimiser les transitions */
+  .mobile-container {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* Styles spécifiques pour les cartes de navigation sur mobile */
+@media (max-width: 768px) {
+  .mobile-nav-card {
+    min-height: 100px !important;
+    margin-bottom: 8px;
+  }
+  
+  .mobile-nav-card .mobile-icon {
+    font-size: 2rem !important;
+    margin-bottom: 8px;
+  }
+  
+  .mobile-nav-card h6 {
+    font-size: 0.9rem !important;
+    margin-bottom: 4px;
+  }
+  
+  .mobile-nav-card p {
+    font-size: 0.75rem !important;
+    line-height: 1.2;
+  }
+  
+  .mobile-grid {
+    gap: 4px !important;
+  }
+  
+  .mobile-grid .MuiGrid-item {
+    padding: 4px !important;
+  }
+}
+
+/* Styles pour les très petits écrans */
+@media (max-width: 480px) {
+  .mobile-nav-card {
+    min-height: 80px !important;
+  }
+  
+  .mobile-nav-card .mobile-icon {
+    font-size: 1.5rem !important;
+  }
+  
+  .mobile-nav-card h6 {
+    font-size: 0.8rem !important;
+  }
+  
+  .mobile-nav-card p {
+    font-size: 0.7rem !important;
+  }
+} 
+
+/* Gradiants Premium */
+.bg-premium-blue {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+  color: white !important;
+}
+
+.bg-premium-rose {
+  background: linear-gradient(135deg, #9f1239 0%, #fb7185 100%) !important;
+  color: white !important;
+}
+
+.bg-premium-emerald {
+  background: linear-gradient(135deg, #064e3b 0%, #10b981 100%) !important;
+  color: white !important;
+}
+
+.bg-premium-amber {
+  background: linear-gradient(135deg, #78350f 0%, #fbbf24 100%) !important;
+  color: white !important;
+}
+
+.bg-premium-indigo {
+  background: linear-gradient(135deg, #312e81 0%, #6366f1 100%) !important;
+  color: white !important;
+}
+
+/* Ombres Premium */
+.shadow-premium {
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Glassmorphism Refiné */
+.mobile-glass-premium {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid rgba(209, 213, 219, 0.3) !important;
+}
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-card-icon-container {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
