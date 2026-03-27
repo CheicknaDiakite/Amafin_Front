@@ -1,5 +1,5 @@
 // src/api/transaction.ts
-import { apiClient } from "./apiClient";
+import Axios from "../_services/caller.service";
 
 export interface Compte {
   id: number;
@@ -19,18 +19,18 @@ export interface Transaction {
 }
 
 export const getTransactions = async (): Promise<Transaction[]> => {
-  const res = await apiClient.get("transactions/");
+  const res = await Axios.get("/entreprise/transactions/");
   return res.data;
 };
 
 export const createTransaction = async (
   data: Omit<Transaction, "id" | "date_transaction">
 ) => {
-  const res = await apiClient.post("transactions/", data);
+  const res = await Axios.post("/entreprise/transactions/", data);
   return res.data;
 };
 
 export const getAllComptes = async (): Promise<Compte[]> => {
-  const res = await apiClient.get("comptes/");
+  const res = await Axios.get("/entreprise/comptes/");
   return res.data;
 };

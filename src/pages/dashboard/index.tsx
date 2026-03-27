@@ -227,7 +227,7 @@ export default function DashboardDefault() {
         setTransactions(txArray);
         setComptes(Array.isArray(cps) ? cps : []);
       } catch {
-        setHasError(true);
+        // setHasError(true);
         setErrorMessage('Impossible de charger les données financières.');
       }
     })();
@@ -331,31 +331,31 @@ export default function DashboardDefault() {
     );
   }
 
-  if (hasError) {
-    return (
-      <Container maxWidth="sm" sx={{ py: { xs: 4, sm: 8 }, px: { xs: 2, sm: 3 } }}>
-        <Alert
-          severity="error"
-          className="shadow-lg rounded-2xl mobile-alert"
-          action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setHasError(false);
-                window.location.reload();
-              }}
-              className="mobile-button"
-            >
-              Réessayer
-            </Button>
-          }
-        >
-          {errorMessage || 'Une erreur est survenue. Réessayez dans un instant.'}
-        </Alert>
-      </Container>
-    );
-  }
+  // if (hasError) {
+  //   return (
+  //     <Container maxWidth="sm" sx={{ py: { xs: 4, sm: 8 }, px: { xs: 2, sm: 3 } }}>
+  //       <Alert
+  //         severity="error"
+  //         className="shadow-lg rounded-2xl mobile-alert"
+  //         action={
+  //           <Button
+  //             color="inherit"
+  //             size="small"
+  //             onClick={() => {
+  //               setHasError(false);
+  //               window.location.reload();
+  //             }}
+  //             className="mobile-button"
+  //           >
+  //             Réessayer
+  //           </Button>
+  //         }
+  //       >
+  //         {errorMessage || 'Une erreur est survenue. Réessayez dans un instant.'}
+  //       </Alert>
+  //     </Container>
+  //   );
+  // }
 
   const welcomeName =
     [unUser.first_name, unUser.last_name].filter(Boolean).join(' ').trim() ||

@@ -18,7 +18,7 @@
 //   const res = await apiClient.post("objectifs/", data);
 //   return res.data;
 // };
-import { apiClient } from './apiClient';
+import Axios from '../_services/caller.service';
 
 export interface Objectif {
   id?: number;
@@ -33,23 +33,23 @@ export interface Objectif {
 }
 
 export const getObjectifs = async (): Promise<Objectif[]> => {
-  const res = await apiClient.get('objectif-financier/');
+  const res = await Axios.get('/entreprise/objectif-financier/');
   return res.data;
 };
 
 export const createObjectif = async (data: {nom: string, montant_cible: number, date_limite: any, compte_associe: any}) => {
-  const res = await apiClient.post('objectif-financier/', data);
+  const res = await Axios.post('/entreprise/objectif-financier/', data);
   console.log('Creating objectif with data:', res);
   
   return res.data;
 };
 
 export const updateObjectif = async (id: number, data: Partial<Objectif>) => {
-  const res = await apiClient.patch(`objectif-financier/${id}/`, data);
+  const res = await Axios.patch(`/entreprise/objectif-financier/${id}/`, data);
   return res.data as Objectif;
 };
 
 export const deleteObjectif = async (id: number | string) => {
-  const res = await apiClient.delete(`objectif-financier/${id}/`);
+  const res = await Axios.delete(`/entreprise/objectif-financier/${id}/`);
   return res.data;
 };

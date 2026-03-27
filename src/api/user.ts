@@ -1,5 +1,5 @@
 // src/api/user.ts
-import { apiClient } from "./apiClient";
+import Axios from "../_services/caller.service";
 
 export interface User {
   id: number;
@@ -8,6 +8,6 @@ export interface User {
 }
 
 export const getUser = async (): Promise<User> => {
-  const res = await apiClient.get("user/");
+  const res = await Axios.get("/entreprise/user/");
   return res.data;
 };

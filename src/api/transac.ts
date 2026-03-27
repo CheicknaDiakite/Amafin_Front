@@ -1,6 +1,6 @@
 // src/api/transaction.ts
 
-import { apiClient } from "./apiClient";
+import Axios from "../_services/caller.service";
 
 
 export interface Transact {
@@ -19,34 +19,34 @@ export interface Transact {
 }
 
 export const getTransacts = async (): Promise<Transact[]> => {
-  const response = await apiClient.get("/transactions/");
+  const response = await Axios.get("/entreprise/transactions/");
   return response.data;
 };
 
 export const getStatis = async () => {
-  const response = await apiClient.get("categories-transactions");
+  const response = await Axios.get("/entreprise/categories-transactions");
   return response.data;
 };
 
 // export const createTransact = async (data: Transact) => {
-//   const response = await apiClient.post("/entreprise/transactions/", data);
+//   const response = await Axios.post("/entreprise/transactions/", data);
 //   return response.data;
 // };
 
 export const createTransact = async (
   data: Omit<Transact, "id" | "date_transaction">
 ) => {
-  const res = await apiClient.post("transactions/", data);
+  const res = await Axios.post("/entreprise/transactions/", data);
   // console.log("Creating transaction with data:", data);
   return res.data;
 };
 
 export const updateTransact = async (id: number, data: Partial<Transact>) => {
-  const res = await apiClient.put(`transactions/${id}/`, data);
+  const res = await Axios.put(`/entreprise/transactions/${id}/`, data);
   return res.data;
 };
 
 export const deleteTransact = async (id: number) => {
-  const res = await apiClient.delete(`transactions/${id}/`);
+  const res = await Axios.delete(`/entreprise/transactions/${id}/`);
   return res.data;
 };

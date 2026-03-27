@@ -1,5 +1,5 @@
 // src/api/compte.ts
-import { apiClient } from "./apiClient";
+import Axios from "../_services/caller.service";
 
 export interface Compte {
   id: number;
@@ -9,22 +9,22 @@ export interface Compte {
 }
 
 export const getComptes = async (): Promise<Compte[]> => {
-  const res = await apiClient.get("comptes/");
+  const res = await Axios.get("/entreprise/comptes/");
   return res.data;
 };
 
 export const createCompte = async (data: { nom: string; solde: number; devise: string; }) => {
-  const res = await apiClient.post("comptes/", data);
+  const res = await Axios.post("/entreprise/comptes/", data);
   return res.data;
 };
 
 export const updateCompte = async (id: number ,data: { nom: string; solde: number; devise?: string; }) => {
   
-  const res = await apiClient.patch(`comptes/${id}/`, data);
+  const res = await Axios.patch(`/entreprise/comptes/${id}/`, data);
   return res.data;
 };
 
 export const deleteCompte = async (data: number | string) => {
-  const res = await apiClient.delete(`comptes/${data}/`);
+  const res = await Axios.delete(`/entreprise/comptes/${data}/`);
   return res.data;
 };
