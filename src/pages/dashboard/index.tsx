@@ -1,11 +1,16 @@
 // material-ui
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import CategoryIcon from '@mui/icons-material/Category';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import SavingsIcon from '@mui/icons-material/Savings';
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
+import SavingsOutlinedIcon from '@mui/icons-material/SavingsOutlined';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import FlagIcon from '@mui/icons-material/Flag';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import { Link } from 'react-router-dom';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useFetchEntreprise, useFetchUser } from '../../usePerso/fonction.user';
@@ -25,7 +30,7 @@ import {
   useTheme,
   alpha,
 } from '@mui/material';
-import MonthlyBarChart from './MonthlyBarChart';
+import MiniExpenseChart from './MiniExpenseChart';
 import './mobile-dashboard.css';
 import MonthlyTarget from './MonthlyTarget';
 import { Compte, getComptes } from '../../api/compte';
@@ -114,38 +119,41 @@ const StatCard: FC<StatCardProps> = ({ title, value, icon, gradient, percentage,
   </Paper>
 );
 
+
+
 const NavigationCard: FC<NavigationCardType> = ({ icon, title, description, to, gradient, iconBg }) => (
   <Link to={to} className="block h-full no-underline">
     <Paper
       elevation={0}
-      className="h-full rounded-xl sm:rounded-[20px] mobile-nav-card mobile-hover-effect border border-gray-100/80 p-3.5 sm:p-5 group mobile-glass"
+      className="h-full rounded-xl sm:rounded-[20px] mobile-nav-card mobile-hover-effect border border-gray-500/80 p-3.5 sm:p-5 group mobile-glass"
       sx={{
         minHeight: { xs: 118, sm: 142 },
         transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
+        boxShadow: (t) => ({ xs: `0 4px 16px ${alpha(t.palette.grey[900], 0.08)}`, sm: 'none' }),
         '@media (hover: hover)': {
           '&:hover': {
             borderColor: 'transparent',
-            boxShadow: (t) => `0 12px 28px ${alpha(t.palette.grey[900], 0.08)}`,
+            boxShadow: (t) => `0 12px 28px ${alpha(t.palette.grey[900], 0.08)} !important`,
           },
         },
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', h: '100%' }}>
         <Box
-          className={`${iconBg} ${gradient} w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl mb-3 flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105 mobile-icon`}
+          className={`${iconBg} ${gradient} w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl mb-3 flex items-center justify-center text-gray-500 shadow-md transition-transform group-hover:scale-105 mobile-icon`}
         >
           {icon}
         </Box>
         <Typography
           variant="h6"
-          className="font-bold text-gray-50 mb-0.5"
+          className="font-bold text-gray-500 mb-0.5"
           sx={{ fontSize: { xs: '0.82rem', sm: '1rem' }, lineHeight: 1.3 }}
         >
           {title}
         </Typography>
         <Typography
           variant="body2"
-          className="text-gray-200 line-clamp-2"
+          className="text-gray-500 line-clamp-2"
           sx={{ fontSize: { xs: '0.7rem', sm: '0.8rem' }, lineHeight: 1.35 }}
         >
           {description}
@@ -166,7 +174,7 @@ function SectionHeader({
 }) {
   return (
     <Box
-      
+
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', sm: 'row' },
@@ -179,12 +187,12 @@ function SectionHeader({
       <Box>
         <Typography
           variant="overline"
-          className='text-gray-50'
+          className='text-gray-500 uppercase'
           sx={{ color: 'text.secondary', letterSpacing: 1.2, fontWeight: 600, fontSize: '0.65rem' }}
         >
           {subtitle}
         </Typography>
-        <Typography className='text-gray-100' variant="h5" sx={{ fontWeight: 800, color: 'text.primary', fontSize: { xs: '1.15rem', sm: '1.35rem' } }}>
+        <Typography className='text-gray-500' variant="h5" sx={{ fontWeight: 800, color: 'text.primary', fontSize: { xs: '1.15rem', sm: '1.35rem' } }}>
           {title}
         </Typography>
       </Box>
@@ -195,13 +203,10 @@ function SectionHeader({
 
 export default function DashboardDefault() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [showBalance, setShowBalance] = useState(true);
   const [comptes, setComptes] = useState<Compte[]>([]);
-  const [transactions, setTransactions] = useState<Transact[]>([]);
 
   const userData = useFetchUser();
   const unUser = userData.unUser;
@@ -216,19 +221,11 @@ export default function DashboardDefault() {
     let cancelled = false;
     (async () => {
       try {
-        const [txs, cps] = await Promise.all([getTransacts(), getComptes()]);
+        const cps = await getComptes();
         if (cancelled) return;
-        const txArray = Array.isArray(txs) ? [...txs] : [];
-        txArray.sort((a, b) => {
-          const ta = a.created_at ? new Date(a.created_at).getTime() : Number(a.id ?? 0);
-          const tb = b.created_at ? new Date(b.created_at).getTime() : Number(b.id ?? 0);
-          return tb - ta;
-        });
-        setTransactions(txArray);
         setComptes(Array.isArray(cps) ? cps : []);
-      } catch {
-        // setHasError(true);
-        setErrorMessage('Impossible de charger les données financières.');
+      } catch (error) {
+        console.error("Erreur chargement comptes", error);
       }
     })();
     return () => {
@@ -262,20 +259,12 @@ export default function DashboardDefault() {
 
   const lastMonthTotal = currentMonthExpenseTotal; // On remplace l'ancienne logique par la nouvelle
 
-  const revenue = typeof totalSolde === 'number' ? totalSolde - lastMonthTotal : null;
-
-  const percentBudgetRestant = useMemo(() => {
-    if (typeof totalSolde === 'number' && totalSolde > 0 && revenue !== null) {
-      const raw = (revenue / totalSolde) * 100;
-      return Math.max(-100, Math.min(100, Math.round(raw * 100) / 100));
-    }
-    return 0;
-  }, [totalSolde, revenue]);
+  const budgetRestant = Math.max(0, totalSolde - lastMonthTotal);
 
   const navigationCards = useMemo(
     () => [
       {
-        icon: <CategoryIcon sx={{ fontSize: 'inherit' }} />,
+        icon: <CategoryOutlinedIcon sx={{ fontSize: 'inherit' }} />,
         title: 'Nature de la dépense',
         description: 'Catégories et libellés',
         gradient: 'bg-premium-indigo',
@@ -283,7 +272,7 @@ export default function DashboardDefault() {
         to: '/categorie',
       },
       {
-        icon: <SavingsIcon sx={{ fontSize: 'inherit' }} />,
+        icon: <SavingsOutlinedIcon sx={{ fontSize: 'inherit' }} />,
         title: 'Budgets',
         description: 'Budgets suivis',
         gradient: 'bg-premium-emerald',
@@ -291,7 +280,7 @@ export default function DashboardDefault() {
         to: '/budget',
       },
       {
-        icon: <AccountBalanceWalletIcon sx={{ fontSize: 'inherit' }} />,
+        icon: <SavingsOutlinedIcon sx={{ fontSize: 'inherit' }} />,
         title: 'Transactions',
         description: 'Historique des flux',
         gradient: 'bg-premium-blue',
@@ -299,7 +288,7 @@ export default function DashboardDefault() {
         to: '/transaction',
       },
       {
-        icon: <FlagIcon sx={{ fontSize: 'inherit' }} />,
+        icon: <FlagOutlinedIcon sx={{ fontSize: 'inherit' }} />,
         title: 'Objectifs',
         description: 'Objectifs financiers',
         gradient: 'bg-premium-amber',
@@ -307,7 +296,7 @@ export default function DashboardDefault() {
         to: '/objectif',
       },
       {
-        icon: <MonetizationOnIcon sx={{ fontSize: 'inherit' }} />,
+        icon: <MonetizationOnOutlinedIcon sx={{ fontSize: 'inherit' }} />,
         title: 'Dépenses',
         description: 'Saisie des dépenses',
         gradient: 'bg-premium-rose',
@@ -331,249 +320,299 @@ export default function DashboardDefault() {
     );
   }
 
-  // if (hasError) {
-  //   return (
-  //     <Container maxWidth="sm" sx={{ py: { xs: 4, sm: 8 }, px: { xs: 2, sm: 3 } }}>
-  //       <Alert
-  //         severity="error"
-  //         className="shadow-lg rounded-2xl mobile-alert"
-  //         action={
-  //           <Button
-  //             color="inherit"
-  //             size="small"
-  //             onClick={() => {
-  //               setHasError(false);
-  //               window.location.reload();
-  //             }}
-  //             className="mobile-button"
-  //           >
-  //             Réessayer
-  //           </Button>
-  //         }
-  //       >
-  //         {errorMessage || 'Une erreur est survenue. Réessayez dans un instant.'}
-  //       </Alert>
-  //     </Container>
-  //   );
-  // }
-
-  const welcomeName =
-    [unUser.first_name, unUser.last_name].filter(Boolean).join(' ').trim() ||
-    unUser.username?.trim() ||
-    'Utilisateur';
-  const dateLabel = format(new Date(), 'EEEE d MMMM yyyy', { locale: fr });
+  // Render du tableau de bord
 
   return (
-    <Box
+    <Container
       component="main"
-      className="min-h-screen mobile-container"
-    // sx={{
-    //   bgcolor: 'grey.50',
-    //   pb: { xs: 'max(24px, env(safe-area-inset-bottom))', sm: 6 },
-    //   pt: { xs: 'max(8px, env(safe-area-inset-top))', sm: 0 },
-    // }}
+      maxWidth="sm"
+
+      sx={{
+        minHeight: '100vh',
+        bgcolor: 'grey.50',
+        pt: { xs: 2, sm: 3, md: 4 },
+        px: { xs: 2, sm: 3, md: 4 },
+        pb: { xs: 'max(24px, env(safe-area-inset-bottom))', sm: 6 },
+      }}
     >
-      <Container
-        maxWidth="xl"
-        sx={{
-          pt: { xs: 2, sm: 3, md: 4 },
-          px: { xs: 2, sm: 3, md: 4 },
-          maxWidth: { lg: '1280px !important' },
-        }}
-      >
-        <Stack spacing={{ xs: 3, sm: 4 }}>
-          {/* En-tête */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              alignItems: { xs: 'stretch', md: 'center' },
-              justifyContent: 'space-between',
-              gap: { xs: 2, md: 3 },
-            }}
-          >
-            <Box sx={{ minWidth: 0 }}>
-              <Typography
-                variant="h4"
-                component="h1"
-                className="font-bold text-gray-50 mb-0.5"
-                sx={{
-                  fontWeight: 800,
-                  
-                  fontSize: { xs: '1.35rem', sm: '1.75rem', md: '2rem' },
-                  lineHeight: 1.25,
-                  mb: 0.5,
-                }}
-              >
-                Tableau de bord
-              </Typography>
-              <Typography
-                variant="body2"
-                className="font-bold text-gray-100 mb-0.5"
-                sx={{
-                  
-                  fontSize: { xs: '0.875rem', sm: '1rem' },
-                  lineHeight: 1.5,
-                }}
-              >
-                Bienvenue, {welcomeName}. Synthèse de votre activité financière.
+      <Stack spacing={3}>
+
+        {/* ═══════════════════════════════════════
+               HERO CARD — Solde + Période
+          ═══════════════════════════════════════ */}
+        <Box
+          sx={{
+            borderRadius: 6,
+            background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f2744 100%)',
+            p: { xs: '28px 24px 24px', sm: '36px 32px 28px' },
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 60px rgba(15, 23, 42, 0.45)',
+          }}
+        >
+          {/* Orbes décoratifs */}
+          <Box sx={{
+            position: 'absolute', top: -60, right: -40,
+            width: 200, height: 200,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(99,102,241,0.35) 0%, transparent 70%)',
+            pointerEvents: 'none',
+          }} />
+          <Box sx={{
+            position: 'absolute', bottom: -40, left: -20,
+            width: 150, height: 150,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%)',
+            pointerEvents: 'none',
+          }} />
+
+          {/* Label */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <AccountBalanceWalletIcon sx={{ color: 'rgba(255,255,255,0.5)', fontSize: 16 }} />
+              <Typography sx={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.72rem', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                Solde total
               </Typography>
             </Box>
-            <Paper
-              elevation={0}
+            <Box
+              component="button"
+              onClick={() => setShowBalance((prev) => !prev)}
               sx={{
-                alignSelf: { xs: 'stretch', md: 'center' },
-                px: { xs: 2, sm: 2.5 },
-                py: { xs: 1.25, sm: 1.5 },
-                borderRadius: 2,
-                border: '1px solid',
-                borderColor: 'divider',
-                bgcolor: 'background.paper',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1.5,
-                flexShrink: 0,
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: '50%',
+                width: 36, height: 36,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer',
+                color: 'rgba(255,255,255,0.7)',
+                transition: 'background 0.2s',
+                '&:hover': { background: 'rgba(255,255,255,0.15)' },
               }}
             >
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  bgcolor: 'success.main',
-                  flexShrink: 0,
-                  animation: 'pulse 2s ease-in-out infinite',
-                  '@keyframes pulse': {
-                    '0%, 100%': { opacity: 1 },
-                    '50%': { opacity: 0.45 },
-                  },
-                }}
-              />
-              <Typography
-                variant="body2"
-                sx={{
-                  color: 'text.secondary',
-                  fontWeight: 500,
-                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                  textTransform: 'capitalize',
-                }}
-              >
-                {dateLabel}
-              </Typography>
-            </Paper>
+              {showBalance
+                ? <VisibilityIcon sx={{ fontSize: 16 }} />
+                : <VisibilityOffIcon sx={{ fontSize: 16 }} />}
+            </Box>
           </Box>
 
-          {/* KPIs */}
-          <Box component="section" aria-label="Indicateurs clés">
-            <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
-              <Grid item xs={12} sm={6} md={4}>
-                <StatCard
-                  title="Solde total"
-                  value={`${totalSolde.toLocaleString('fr-FR')} FCFA`}
-                  icon={<AccountBalanceWalletIcon />}
-                  gradient="bg-premium-indigo"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <StatCard
-                  title="Dépenses du mois"
-                  value={`${lastMonthTotal.toLocaleString('fr-FR')} FCFA`}
-                  icon={<MonetizationOnIcon />}
-                  gradient="bg-premium-rose"
-                  percentage="12%"
-                  isIncrease={false}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <StatCard
-                  title="Budget restant"
-                  value={`${percentBudgetRestant}%`}
-                  icon={<SavingsIcon />}
-                  gradient="bg-premium-emerald"
-                  percentage="5%"
-                  isIncrease
-                />
-              </Grid>
-            </Grid>
+          {/* Montant */}
+          <Typography
+            sx={{
+              fontSize: { xs: '2rem', sm: '2.6rem' },
+              fontWeight: 800,
+              color: 'white',
+              letterSpacing: -0.5,
+              lineHeight: 1.1,
+              mb: 0.5,
+              fontVariantNumeric: 'tabular-nums',
+              transition: 'opacity 0.2s',
+            }}
+          >
+            {showBalance ? totalSolde.toLocaleString('fr-FR') : '••••••'}
+          </Typography>
+          <Typography sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.78rem', fontWeight: 600, mb: 3, letterSpacing: 0.5 }}>
+            FCFA
+          </Typography>
+
           </Box>
 
-          {/* Graphiques */}
-          <Box component="section" aria-label="Graphiques et objectifs mensuels">
-            <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
-              <Grid item xs={12} lg={8}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    borderRadius: { xs: 2, sm: 3 },
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.paper',
-                    overflow: 'hidden',
-                    height: '100%',
-                    boxShadow: (t) => `0 1px 3px ${alpha(t.palette.common.black, 0.06)}`,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      px: { xs: 2, sm: 3 },
-                      py: { xs: 1.75, sm: 2.25 },
-                      borderBottom: '1px solid',
-                      borderColor: 'divider',
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: 1,
-                    }}
-                  >
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: 'text.primary' }}>
-                      Dépenses par mois
+        {/* ═══════════════════════════════════════
+               2 CARTES BUDGET / DÉPENSES
+          ═══════════════════════════════════════ */}
+        <Grid container spacing={2}>
+          {/* Budget restant */}
+          <Grid item xs={6}>
+            {(() => {
+              const pct = totalSolde > 0 ? Math.min(100, Math.round((budgetRestant / totalSolde) * 100)) : 0;
+              const color = pct >= 50 ? '#10B981' : pct >= 25 ? '#F59E0B' : '#EF4444';
+              const radius = 28;
+              const circ = 2 * Math.PI * radius;
+              return (
+                <Paper elevation={0} sx={{
+                  p: 2.5, borderRadius: 5,
+                  bgcolor: 'white',
+                  border: '1px solid rgba(0,0,0,0.06)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+                  display: 'flex', flexDirection: 'column', gap: 1.5,
+                  minHeight: 160,
+                }}>
+                  {/* Icône */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{
+                      width: 32, height: 32, borderRadius: 2,
+                      background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <AccountBalanceWalletIcon sx={{ fontSize: 16, color: '#059669' }} />
+                    </Box>
+                    <Typography className='text-gray-500' sx={{ fontSize: '0.7rem', fontWeight: 600, lineHeight: 1.2 }}>
+                      Budget<br />restant
                     </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'primary.main' }} />
-                      <Typography variant="caption" color="text.secondary" fontWeight={500}>
-                        Données à jour
+                  </Box>
+                  {/* Valeur + anneau */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Box>
+                      <Typography className='text-gray-500' sx={{ fontSize: '1.1rem', fontWeight: 800, color, lineHeight: 1.1 }}>
+                        {budgetRestant.toLocaleString('fr-FR')}
                       </Typography>
+                      <Typography className='text-gray-500' sx={{ fontSize: '0.6rem', color: 'text.disabled', fontWeight: 600 }}>FCFA</Typography>
+                    </Box>
+                    {/* SVG ring */}
+                    <Box component="svg" width={64} height={64} viewBox="0 0 68 68" sx={{ transform: 'rotate(-90deg)' }}>
+                      <circle cx={34} cy={34} r={radius} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth={6} />
+                      <circle cx={34} cy={34} r={radius} fill="none" stroke={color} strokeWidth={6}
+                        strokeLinecap="round"
+                        strokeDasharray={circ}
+                        strokeDashoffset={circ * (1 - pct / 100)}
+                        style={{ transition: 'stroke-dashoffset 0.6s ease' }}
+                      />
                     </Box>
                   </Box>
-                  <Box sx={{ p: { xs: 1.5, sm: 2, md: 3 }, minWidth: 0 }}>
-                    <MonthlyBarChart />
+                  <Typography className='text-gray-500' sx={{ fontSize: '0.65rem', color: 'text.disabled' }}>{pct}% disponible</Typography>
+                </Paper>
+              );
+            })()}
+          </Grid>
+
+          {/* Dépenses du mois */}
+          <Grid item xs={6}>
+            {(() => {
+              const pct = totalSolde > 0 ? Math.min(100, Math.round((currentMonthExpenseTotal / totalSolde) * 100)) : 0;
+              const color = pct <= 30 ? '#10B981' : pct <= 60 ? '#F59E0B' : '#EF4444';
+              const radius = 28;
+              const circ = 2 * Math.PI * radius;
+              return (
+                <Paper elevation={0} sx={{
+                  p: 2.5, borderRadius: 5,
+                  bgcolor: 'white',
+                  border: '1px solid rgba(0,0,0,0.06)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+                  display: 'flex', flexDirection: 'column', gap: 1.5,
+                  minHeight: 160,
+                }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{
+                      width: 32, height: 32, borderRadius: 2,
+                      background: 'linear-gradient(135deg, #fee2e2, #fecaca)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <TrendingDownIcon sx={{ fontSize: 16, color: '#DC2626' }} />
+                    </Box>
+                    <Typography className='text-gray-500' sx={{ fontSize: '0.7rem', fontWeight: 600, lineHeight: 1.2 }}>
+                      Dépenses<br />du mois
+                    </Typography>
                   </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Box>
+                      <Typography className='text-gray-500' sx={{ fontSize: '1.1rem', fontWeight: 800, color, lineHeight: 1.1 }}>
+                        {currentMonthExpenseTotal.toLocaleString('fr-FR')}
+                      </Typography>
+                      <Typography className='text-gray-500' sx={{ fontSize: '0.6rem', color: 'text.disabled', fontWeight: 600 }}>FCFA</Typography>
+                    </Box>
+                    <Box component="svg" width={64} height={64} viewBox="0 0 68 68" sx={{ transform: 'rotate(-90deg)' }}>
+                      <circle cx={34} cy={34} r={radius} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth={6} />
+                      <circle cx={34} cy={34} r={radius} fill="none" stroke={color} strokeWidth={6}
+                        strokeLinecap="round"
+                        strokeDasharray={circ}
+                        strokeDashoffset={circ * (1 - pct / 100)}
+                        style={{ transition: 'stroke-dashoffset 0.6s ease' }}
+                      />
+                    </Box>
+                  </Box>
+                  <Typography className='text-gray-500' sx={{ fontSize: '0.65rem', color: 'text.disabled' }}>{pct}% du solde</Typography>
                 </Paper>
-              </Grid>
+              );
+            })()}
+          </Grid>
+        </Grid>
 
-              <Grid item xs={12} lg={4}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    borderRadius: { xs: 2, sm: 3 },
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.paper',
-                    overflow: 'hidden',
-                    height: '100%',
-                    boxShadow: (t) => `0 1px 3px ${alpha(t.palette.common.black, 0.06)}`,
-                  }}
-                >
-                  <MonthlyTarget />
-                </Paper>
-              </Grid>
-            </Grid>
-          </Box>
+        {/* ═══════════════════════════════════════
+               GRAPHIQUE + OBJECTIFS (côte à côte)
+          ═══════════════════════════════════════ */}
+        <Grid container spacing={2}>
 
-          {/* Actions rapides */}
-          <Box component="section" aria-label="Raccourcis vers les modules" sx={{ pb: { xs: 1, sm: 0 } }}>
-            <SectionHeader title="Raccourcis" subtitle="Navigation" />
-            <Grid container spacing={isMobile ? 1.5 : 2}>
-              {navigationCards.map((card) => (
-                <Grid item xs={6} sm={4} md={2.4} key={card.to}>
-                  <NavigationCard {...card} />
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </Stack>
-      </Container>
-    </Box>
+          {/* Dépenses — mini area chart */}
+          <Grid item xs={6}>
+            <Paper elevation={0} sx={{
+              borderRadius: 5,
+              border: '1px solid rgba(0,0,0,0.06)',
+              bgcolor: 'white',
+              overflow: 'hidden',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+              height: '100%',
+            }}>
+              {/* Header colonne */}
+              <Box sx={{
+                px: 1.5, pt: 1.5, pb: 1,
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1,
+                borderBottom: '1px solid rgba(0,0,0,0.05)',
+              }}>
+                <Box sx={{
+                  width: 28, height: 28, borderRadius: 2, flexShrink: 0,
+                  background: 'linear-gradient(135deg, #ede9fe, #ddd6fe)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <BarChartIcon sx={{ fontSize: 15, color: '#7c3aed' }} />
+                </Box>
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography className='text-gray-500' sx={{ fontWeight: 700, fontSize: '0.72rem', color: 'text.primary', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    Dépenses
+                  </Typography>
+                  <Typography className='text-gray-500' sx={{ fontSize: '0.58rem', color: 'text.disabled', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Évolution</Typography>
+                </Box>
+              </Box>
+              <MiniExpenseChart />
+            </Paper>
+          </Grid>
+
+          {/* Objectifs financiers */}
+          <Grid item xs={6}>
+            <Paper elevation={0} sx={{
+              borderRadius: 5,
+              border: '1px solid rgba(0,0,0,0.06)',
+              bgcolor: 'white',
+              overflow: 'hidden',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+              height: '100%',
+            }}>
+              {/* Header colonne */}
+              <Box sx={{
+                px: 1.5, pt: 1.5, pb: 1,
+                display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1,
+                borderBottom: '1px solid rgba(0,0,0,0.05)',
+              }}>
+                <Box sx={{
+                  width: 28, height: 28, borderRadius: 2, flexShrink: 0,
+                  background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <TrackChangesIcon sx={{ fontSize: 15, color: '#d97706' }} />
+                </Box>
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography className='text-gray-500' sx={{ fontWeight: 700, fontSize: '0.72rem', color: 'text.primary', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    Objectifs
+                  </Typography>
+                  <Typography className='text-gray-500' sx={{ fontSize: '0.58rem', color: 'text.disabled', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Suivi des cibles</Typography>
+                </Box>
+              </Box>
+              <MonthlyTarget />
+            </Paper>
+          </Grid>
+
+        </Grid>
+
+        {/* Actions rapides */}
+        <Box sx={{ pb: { xs: 2, sm: 0 } }}>
+          <SectionHeader title="Raccourcis" subtitle="Navigation" />
+          <Grid container spacing={2}>
+            {navigationCards.map((card) => (
+              <Grid item xs={6} sm={4} key={card.to}>
+                <NavigationCard {...card} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </Stack>
+    </Container>
   );
 }

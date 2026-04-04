@@ -25,6 +25,7 @@ export default function MonthlyBarChart() {
   /** Mois en bas (ex. « janvier 2026 », « février 2026 ») — API renvoie déjà le libellé français */
   const xLabels = rows.map((d) => d.mois.trim());
   const values = rows.map((d) => Number(d.total) || 0);
+  const maxValue = Math.max(...values, 1);
 
   if (rows.length === 0) {
     return (
@@ -37,9 +38,9 @@ export default function MonthlyBarChart() {
   const manyMonths = xLabels.length > 5;
 
   return (
-    <Box sx={{ width: '100%', minHeight: 380 }}>
+    <Box sx={{ width: '100%', minHeight: 300 }}>
       <BarChart
-        height={360}
+        height={280}
         margin={{ top: 36, right: 16, bottom: manyMonths ? 72 : 56, left: 56 }}
         series={[
           {
@@ -47,9 +48,10 @@ export default function MonthlyBarChart() {
             type: 'bar',
             label: 'Montant',
             data: values,
-            color: '#3b82f6',
+            color: '#2563EB', // Bleu cible
             valueFormatter: (value) =>
               value == null ? '' : `${formatMontant(value)} FCFA`,
+            barRadius: 4, // Coins arrondis
           },
         ]}
         xAxis={[
@@ -66,16 +68,18 @@ export default function MonthlyBarChart() {
         yAxis={[
           {
             valueFormatter: (value) => formatMontant(value as number),
+            grid: { stroke: 'rgba(148,163,184,0.25)', strokeDasharray: '3 3' },
           },
         ]}
-        barLabel={(item) => (item.value != null ? formatMontant(item.value) : '')}
+        barLabel={(item) => (item.value != null ? '●' : '')} // Point sur le dessus
         tooltip={{ trigger: 'item' }}
         slotProps={{
           barLabel: {
             style: {
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 600,
-              fill: '#1e3a5f',
+              fill: '#2563EB', // Bleu
+              dy: -8, // Position au-dessus de la barre
             },
           },
         }}

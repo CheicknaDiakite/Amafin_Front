@@ -16,12 +16,12 @@ import { connect } from '../../../../../_services/account.service';
 // ==============================|| HEADER PROFILE - SETTING TAB ||============================== //
 
 export default function SettingTab() {
-  const {unUser} = useFetchUser(String(connect))
+  const { unUser } = useFetchUser()
 
   return (
     <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}>
-      {(unUser.role === 1 || unUser.role === 2 || unUser.role === 3) &&       
-        <Link to={`/entreprise/produit/sortie`}>      
+      {(unUser.role === 1 || unUser.role === 2 || unUser.role === 3) &&
+        <Link to={`/produit/sortie`}>
           <ListItemButton >
             <ListItemIcon>
               <FileCopyIcon color="primary" />
@@ -30,8 +30,8 @@ export default function SettingTab() {
           </ListItemButton>
         </Link>
       }
-      {(unUser.role === 1 || unUser.role === 2) &&       
-        <Link to={`/entreprise/produit/entre`}>      
+      {(unUser.role === 1 || unUser.role === 2) &&
+        <Link to={`/produit/entre`}>
           <ListItemButton >
             <ListItemIcon>
               <FileOpenIcon color="primary" />
@@ -41,8 +41,8 @@ export default function SettingTab() {
         </Link>
       }
 
-      {(unUser.role === 1 || unUser.role === 2 || unUser.role === 3) && 
-        <Link to={"/entreprise/depense"}>        
+      {(unUser.role === 1 || unUser.role === 2 || unUser.role === 3) &&
+        <Link to={"/depense"}>
           <ListItemButton >
             <ListItemIcon>
               <MonetizationOnIcon color="primary" />
@@ -51,7 +51,7 @@ export default function SettingTab() {
           </ListItemButton>
         </Link>
       }
-      
+
     </List>
   );
 }

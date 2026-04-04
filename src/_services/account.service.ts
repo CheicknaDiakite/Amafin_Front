@@ -146,7 +146,7 @@ const allClients = async (data: string) => {
     
 }
 
-const userUpdate = async (post: UserType): Promise<ReponseUser> => {
+const userUpdate = async (post: any): Promise<ReponseUser> => {
     try {
         const response = await Axios.post('utilisateur/profile/set', post,{ withCredentials: true });
         return response;

@@ -64,7 +64,7 @@ export default function MonthlyTarget() {
     chart: {
       fontFamily: "Outfit, sans-serif",
       type: "radialBar",
-      height: 330,
+      height: 200,
       sparkline: { enabled: true },
     },
     plotOptions: {
@@ -76,9 +76,9 @@ export default function MonthlyTarget() {
         dataLabels: {
           name: { show: false },
           value: {
-            fontSize: "36px",
+            fontSize: "24px",
             fontWeight: 600,
-            offsetY: -40,
+            offsetY: -30,
             color: "#1D2939",
             formatter: function () {
               return `${safePercent}%`;
@@ -139,63 +139,35 @@ export default function MonthlyTarget() {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
-      <div className="px-5 pt-5 bg-white shadow-default rounded-2xl pb-11 sm:px-6 sm:pt-6">
+    <div className="rounded-2xl border bg-gray-300 dark:bg-white/[0.03]">
+      <div className="px-3 pt-3 bg-white shadow-default rounded-2xl pb-6 sm:px-5 sm:pt-5">
         <div className="flex justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="text-lg font-semibold text-gray-800">Objectifs financiers</h3>
-            <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400 text-sm">
-              Progression globale sur{" "}
-              <span className="font-semibold text-gray-700">
-                {objectifs.length} objectif{objectifs.length > 1 ? "s" : ""}
-              </span>{" "}
-              (
-              <span style={{ color: primaryColor, fontWeight: 700 }}>{safePercent}%</span> de la cible totale)
+            {/* <h3 className="text-lg font-semibold text-gray-800">Objectifs financiers</h3> */}
+            <p className="mt-1 text-gray-900 text-theme-sm dark:text-gray-900 text-sm">
+              Progression globale (
+              <span style={{ color: primaryColor, fontWeight: 700 }}>{safePercent}%</span>)
             </p>
           </div>
         </div>
 
         <div className="relative">
-          <div className="max-h-[330px]" id="chartObjectifsRadial">
-            <Chart options={options} series={series} type="radialBar" height={330} />
+          <div className="max-h-[200px]" id="chartObjectifsRadial">
+            <Chart options={options} series={series} type="radialBar" height={200} />
           </div>
 
-          <span
-            className="absolute left-1/2 top-full -translate-x-1/2 -translate-y-[95%] rounded-full px-3 py-1 text-xs font-medium"
-            style={{
-              background: safePercent >= 70 ? "rgba(3,152,85,0.08)" : "rgba(247,144,9,0.12)",
-              color: primaryColor,
-            }}
-          >
-            {safePercent >= 100 ? "Objectif atteint" : `${fmt(totalAtteint)} / ${fmt(totalCible)} FCFA`}
-          </span>
         </div>
 
-        <p className="mx-auto mt-10 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base">
-          Indicateur basé sur la somme des montants atteints et des montants cibles de vos objectifs financiers
-          (identique à la page Objectifs).
-        </p>
       </div>
 
-      <div className="flex items-center justify-center gap-5 px-6 py-3.5 sm:gap-8 sm:py-5 flex-wrap">
-        <div>
-          <p className="mb-1 text-center text-gray-500 text-theme-xs sm:text-sm">
-            Montant atteint
-          </p>
-          <p className="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 sm:text-lg">
-            {fmt(totalAtteint)} FCFA
-          </p>
+      <div className="flex flex-col items-start gap-1 px-3 py-2 flex-wrap">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-green-500"></span>
+          <span className="text-xs text-gray-700 font-semibold">{fmt(totalAtteint)} FCFA</span>
         </div>
-
-        <div className="hidden sm:block w-px bg-gray-200 h-7 dark:bg-gray-800 shrink-0" />
-
-        <div>
-          <p className="mb-1 text-center text-gray-500 text-theme-xs sm:text-sm">
-            Montant cible (total)
-          </p>
-          <p className="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 sm:text-lg">
-            {fmt(totalCible)} FCFA
-          </p>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+          <span className="text-xs text-gray-500">{fmt(totalCible)} F</span>
         </div>
       </div>
     </div>

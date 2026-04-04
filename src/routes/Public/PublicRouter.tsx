@@ -16,7 +16,6 @@ import Personnel from '../../boutique/proprietaire/Personnel/Personnel'
 import { PersonnelModif } from '../../boutique/proprietaire/Personnel/PersonnelModif'
 import Avis from '../../boutique/proprietaire/users/Avis'
 import MesInscrit from '../../boutique/proprietaire/users/MesInscrit'
-import backgroundImage from '../../../public/icon-192x192.png'
 import { Box } from '@mui/material'
 import { useStoreUuid } from '../../usePerso/store'
 import { useFetchEntreprise } from '../../usePerso/fonction.user'
@@ -27,19 +26,10 @@ import Objectifs from '../../components/Objectifs'
 
 
 export default function PublicRouter() {
-  // notClick()
-
-  const url = backgroundImage;
-
   return (
     <Box
-      className='bg-red-200'
       sx={{
-        background: `linear-gradient(rgba(128, 128, 128, 0.7), rgba(128, 128, 128, 0.7)), url(${url})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        padding: { xs: '16px', sm: '24px', md: '32px' }
+        minHeight: '100vh',
       }}
     >
       <Routes>

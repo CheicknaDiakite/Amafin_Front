@@ -308,17 +308,16 @@ export function useUpdateUser() {
     const useQ = useQueryClient();
 
     const modif = useMutation({
-      mutationFn: (post: UserType) => {
+      mutationFn: (post: any) => {
         return userService
           .userUpdate(post)
           .then((res) => {
             if (res.data.etat === true) {
-              toast.success("Modification reuissi");
+              toast.success(res.data.message || "Modification réussie");
               useQ.invalidateQueries({ queryKey: ["User"] });
-              // navigate("/admin/formation/index")
-              
+              return res.data;
             } else {
-              toast.error("Nom trouver");
+              toast.error(res.data.message || "Une erreur est survenue");
             }
           })
           .catch((err) => console.log(err));
@@ -327,12 +326,11 @@ export function useUpdateUser() {
        foncError(error);
       },
     });
-    const updateUser = (post: UserType) => {
-      modif.mutate(post);
-
+    const updateUser = (post: any, options?: any) => {
+      modif.mutate(post, options);
     };
 
-      return {updateUser}
+      return {updateUser, modif}
 }
 
 export function useDeleteUser() {

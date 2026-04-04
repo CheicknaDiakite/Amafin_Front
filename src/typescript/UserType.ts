@@ -44,6 +44,7 @@ export type UtilisateurType = {
     is_cabinet?: boolean;
     repassword?: string,
     password?: string,
+    profession?: string;
   };
 
   export type ClienType = {

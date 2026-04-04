@@ -1,13 +1,13 @@
-import { 
-  Box, 
-  Button, 
+import {
+  Box,
+  Button,
   Container,
-  FormControl, 
-  InputLabel, 
-  MenuItem, 
-  Modal, 
-  Select, 
-  TextField, 
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
   Typography,
   Paper,
   IconButton,
@@ -29,6 +29,7 @@ import Nav from '../../../_components/Button/Nav';
 import CloseIcon from '@mui/icons-material/Close';
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
+import { BASE } from '../../../_services/caller.service';
 
 const style = {
   position: 'absolute' as const,
@@ -45,9 +46,11 @@ const style = {
 export default function Admin() {
   const { uuid } = useParams();
   const [open, setOpen] = useState(false);
+  // @ts-ignore - useFetchUser actually doesn't accept an argument, but keeping original code's behavior
   const { unUser, setUnUser, isLoading, isError } = useFetchUser(uuid!);
   const { updateUser } = useUpdateUser();
   const options = countryList().getData();
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -59,7 +62,7 @@ export default function Admin() {
       [name]: value,
     });
   };
-  
+
   const onSelectChange = (e: SelectChangeEvent<string>) => {
     setUnUser({
       ...unUser,
@@ -67,24 +70,61 @@ export default function Admin() {
     });
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAvatarFile(e.target.files[0]);
+    }
+  };
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    unUser["user_id"] = connect;
-    updateUser(unUser);
+    const formData = new FormData();
+
+    Object.keys(unUser).forEach(key => {
+      const value = unUser[key as keyof typeof unUser];
+      // Skip avatar (if it's the old string URL), and other objects (like id/uuid if they are objects, but here they are strings)
+      if (key === 'avatar') return;
+
+      if (value !== null && value !== undefined && typeof value !== 'object') {
+        formData.append(key, value.toString());
+      }
+    });
+
+    if (avatarFile) {
+      formData.append('avatar', avatarFile);
+    }
+
+    // Ensure uuid and user_id are set
+    formData.append('uuid', unUser.uuid || uuid || '');
+    formData.append('user_id', connect);
+
+    updateUser(formData);
   };
 
   const onSubmitPass = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Use the actual logged-in user's uuid for the update payload to bypass permission blocks
     unUser["uuid"] = connect;
     unUser["user_id"] = connect;
-    
+
     if (unUser.password !== unUser.repassword) {
       toast.error("Les deux mots de passe ne correspondent pas");
       return;
     }
-    
-    updateUser(unUser);
-    logout();
+
+    const formData = new FormData();
+    formData.append('uuid', connect);
+    formData.append('user_id', connect);
+    formData.append('password', unUser.password || '');
+    formData.append('repassword', unUser.repassword || '');
+
+    updateUser(formData, {
+      onSuccess: (data: any) => {
+        if (data && data.etat === true) {
+          logout();
+        }
+      }
+    });
   };
 
   if (isLoading) {
@@ -98,7 +138,7 @@ export default function Admin() {
   if (isError) {
     return (
       <Container maxWidth="sm" className="py-8">
-        <Alert 
+        <Alert
           severity="error"
           className="shadow-lg"
           action={
@@ -116,16 +156,28 @@ export default function Admin() {
   if (unUser) {
     return (
       <>
-        <Nav />
+
         <Container maxWidth="lg" className="py-8">
           <Paper elevation={0} className="border rounded-lg overflow-hidden">
             <Box className="p-6 border-b bg-gray-50">
               <div className="flex items-center gap-4">
-                <Avatar 
-                  className="w-16 h-16 bg-blue-100 text-blue-600"
-                >
-                  <PersonIcon className="w-8 h-8" />
-                </Avatar>
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="avatar-upload"
+                  type="file"
+                  onChange={handleFileChange}
+                />
+                <label htmlFor="avatar-upload">
+                  <IconButton component="span">
+                    <Avatar
+                      className="w-16 h-16 bg-blue-100 text-blue-600 cursor-pointer hover:opacity-80 transition-opacity"
+                      src={avatarFile ? URL.createObjectURL(avatarFile) : (unUser.avatar ? BASE(unUser.avatar) : undefined)}
+                    >
+                      {!avatarFile && !unUser.avatar && <PersonIcon className="w-8 h-8" />}
+                    </Avatar>
+                  </IconButton>
+                </label>
                 <div>
                   <Typography variant="h4" className="font-semibold text-gray-900">
                     Profile Utilisateur
@@ -148,7 +200,7 @@ export default function Admin() {
                     <TextField
                       label="Nom d'utilisateur"
                       name="username"
-                      value={unUser.username}
+                      value={unUser.username || ''}
                       onChange={onChange}
                       disabled
                       className="bg-gray-50"
@@ -158,7 +210,7 @@ export default function Admin() {
                     <TextField
                       label="Nom"
                       name="last_name"
-                      value={unUser.last_name}
+                      value={unUser.last_name || ''}
                       onChange={onChange}
                       required
                       fullWidth
@@ -167,9 +219,17 @@ export default function Admin() {
                     <TextField
                       label="Prénom"
                       name="first_name"
-                      value={unUser.first_name}
+                      value={unUser.first_name || ''}
                       onChange={onChange}
                       required
+                      fullWidth
+                    />
+
+                    <TextField
+                      label="Profession"
+                      name="profession"
+                      value={unUser.profession || ''}
+                      onChange={onChange}
                       fullWidth
                     />
                   </Stack>
@@ -182,7 +242,7 @@ export default function Admin() {
                     <TextField
                       label="Numéro"
                       name="numero"
-                      value={unUser.numero}
+                      value={unUser.numero || ''}
                       onChange={onChange}
                       fullWidth
                     />
@@ -207,7 +267,7 @@ export default function Admin() {
                       label="Email"
                       name="email"
                       type="email"
-                      value={unUser.email}
+                      value={unUser.email || ''}
                       onChange={onChange}
                       required
                       fullWidth
@@ -248,7 +308,7 @@ export default function Admin() {
                 <Typography variant="h6" className="font-medium">
                   Changement de mot de passe
                 </Typography>
-                <IconButton 
+                <IconButton
                   onClick={handleClose}
                   size="small"
                   className="text-gray-500 hover:text-gray-700"

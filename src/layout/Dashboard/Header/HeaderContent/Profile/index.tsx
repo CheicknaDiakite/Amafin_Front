@@ -147,17 +147,17 @@ export default function Profile() {
           onClick={handleToggle}
         >
           <Stack direction="row" spacing={1.25} alignItems="center">
-            <Avatar 
-              {...stringAvatar(`${unUser.last_name} ${unUser.first_name}`)} 
-              sx={{ 
-                width: 32, 
+            <Avatar
+              {...stringAvatar(`${unUser.last_name} ${unUser.first_name}`)}
+              sx={{
+                width: 32,
                 height: 32,
                 fontSize: '0.875rem'
-              }} 
+              }}
             />
-            <Typography 
-              variant="subtitle1" 
-              sx={{ 
+            <Typography
+              variant="subtitle1"
+              sx={{
                 textTransform: 'capitalize',
                 fontWeight: 600,
                 display: { xs: 'none', sm: 'block' },
@@ -199,11 +199,6 @@ export default function Profile() {
                             <Avatar alt="profile user" {...stringAvatar(`${unUser.last_name} ${unUser.first_name}`)} sx={{ width: 32, height: 32 }} />
                             <Stack>
                               <Typography variant="h6">{unUser.last_name} {unUser.first_name}</Typography>
-
-                              {/* <Typography variant="body2" color="text.secondary">
-                                {unEntreprise.nom}
-                              </Typography> */}
-
                             </Stack>
                           </Stack>
                         </Grid>
@@ -217,21 +212,21 @@ export default function Profile() {
                       </Grid>
                     </CardContent>
 
-                    {uuid && <>
-                      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="profile tabs">
-                          <Tab
-                            sx={{
-                              display: 'flex',
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              textTransform: 'capitalize'
-                            }}
-                            icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                            label="Profile"
-                            {...a11yProps(0)}
-                          />
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                      <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="profile tabs">
+                        <Tab
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            textTransform: 'capitalize'
+                          }}
+                          icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
+                          label="Profile"
+                          {...a11yProps(0)}
+                        />
+                        {uuid && (
                           <Tab
                             sx={{
                               display: 'flex',
@@ -244,15 +239,17 @@ export default function Profile() {
                             label="Facture / Depense"
                             {...a11yProps(1)}
                           />
-                        </Tabs>
-                      </Box>
-                      <TabPanel value={value} index={0}>
-                        <ProfileTab />
-                      </TabPanel>
+                        )}
+                      </Tabs>
+                    </Box>
+                    <TabPanel value={value} index={0}>
+                      <ProfileTab />
+                    </TabPanel>
+                    {uuid && (
                       <TabPanel value={value} index={1}>
                         <SettingTab />
                       </TabPanel>
-                    </>}
+                    )}
 
                   </MainCard>
                 </ClickAwayListener>

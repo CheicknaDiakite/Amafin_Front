@@ -45,7 +45,7 @@ export default function ProfileTab() {
   if (unUser) {
     return (
       <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}>
-        <Link to={`/entreprise/utilisateur/modif/${unUser.uuid}`}>
+        <Link to={`/utilisateur/modif/${unUser.uuid}`}>
           <ListItemButton >
             <ListItemIcon>
               <EditIcon color="primary" fontSize="small"/>
@@ -54,7 +54,7 @@ export default function ProfileTab() {
           </ListItemButton>
         </Link>
         {unUser.role === 1 && 
-          <Link to={"/entreprise/personnel"}>
+          <Link to={"/personnel"}>
             <ListItemButton >
               <ListItemIcon>
                 <PeopleOutlineRoundedIcon color="primary" />
@@ -65,7 +65,7 @@ export default function ProfileTab() {
         }
         {(unUser.role === 1 || unUser.role === 2 || unUser.role === 3) && 
         
-        <Link to={"/entreprise/client"}>
+        <Link to={"/client"}>
           <ListItemButton >
             <ListItemIcon>
               <PeopleOutlineRoundedIcon color="primary" />
@@ -76,7 +76,7 @@ export default function ProfileTab() {
         }
         
         {unUser.role === 1 && <>        
-        <Link to={"/entreprise/detail"}>
+        <Link to={"/detail"}>
           <ListItemButton >
             <ListItemIcon>
               <AddBusinessIcon color="primary" />

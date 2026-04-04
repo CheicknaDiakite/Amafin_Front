@@ -57,7 +57,7 @@ Axios.interceptors.response.use(
                 );
 
                 const newAccess = refreshResponse?.data?.access;
-                
+
                 if (newAccess) {
                     localStorage.setItem('token_1', newAccess);
                     originalRequest.headers = originalRequest.headers || {};
